@@ -2,10 +2,13 @@
 
 public class WireStripper : MonoBehaviour, ITool
 {
+    public ToolState Id => ToolState.WireStripper;
+
     public bool Execute(RaycastHit hit)
     {
-        CablePoint point = hit.collider.GetComponent<CablePoint>();
-        
+        // Collider ada di "Handle", CablePoint ada di parent-nya.
+        CablePoint point = HitResolver.Resolve<CablePoint>(hit);
+
         if (point == null)
             return false;
 

@@ -1,6 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Generic pointer dispatcher: Mouse/Touch -> RaycastHit -> ITool.Execute.
+/// Tidak mengenal CablePoint, RJ45, Crimp, maupun Tester — resolusi target
+/// sepenuhnya urusan masing-masing tool.
+/// </summary>
 public class ToolInput : MonoBehaviour
 {
     [Header("Input Actions")]
@@ -9,12 +14,12 @@ public class ToolInput : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private ToolManager toolManager;
-    
-    private Camera _mainCamera;
+    [SerializeField] private Camera mainCamera;
 
     private void Awake()
     {
-        _mainCamera = Camera.main;
+        if (mainCamera == null)
+            mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -35,18 +40,20 @@ public class ToolInput : MonoBehaviour
 
     private void OnPointerPressed(InputAction.CallbackContext context)
     {
-        Vector2 screenPosition = pointerPosition.action.ReadValue<Vector2>();
+        // Arbitrase: klik hanya diproses saat mode UseTool.
+        if (!InputModeService.Is(InputMode.UseTool))
+            return;
 
-        Ray ray = _mainCamera.ScreenPointToRay(screenPosition);
+        ITool tool = toolManager.CurrentTool;
+        if (tool == null)
+            return;
+
+        Vector2 screenPosition = pointerPosition.action.ReadValue<Vector2>();
+        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
 
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
-        CablePoint point = hit.collider.GetComponent<CablePoint>();
-
-        if (point == null)
-            return;
-
-        toolManager.CurrentTool?.Execute(hit);
+        tool.Execute(hit);
     }
 }

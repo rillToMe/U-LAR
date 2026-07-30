@@ -2,6 +2,7 @@
 {
     None,
     WireStripper,
+    RJ45Tool,
     CrimpingTool,
     Cutter,
     LanTester

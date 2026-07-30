@@ -1,43 +1,45 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class RJ45Controller : MonoBehaviour
+public class CrimpController : MonoBehaviour
 {
+    [Header("Reference")]
     [SerializeField] private CablePoint cablePoint;
     [SerializeField] private RJ45Point rj45Point;
     [SerializeField] private PracticeManager practiceManager;
 
-    public bool TryInsert()
+    public bool TryCrimp()
     {
         if (cablePoint == null || rj45Point == null)
             return false;
 
-        if (cablePoint.State != CableState.Stripped)
+        // Harus sudah dipasang RJ45
+        if (rj45Point.State != RJ45State.Inserted)
             return false;
 
-        if (rj45Point.State != RJ45State.None)
-            return false;
-
+        // Harus sesuai step praktikum
         if (practiceManager != null &&
-            !practiceManager.CanInsertRJ45(cablePoint))
+            !practiceManager.CanCrimp(cablePoint))
             return false;
 
-        rj45Point.State = RJ45State.Inserted;
+        rj45Point.State = RJ45State.Crimped;
 
         practiceManager?.CompleteCurrentStep();
 
-        Debug.Log($"{name} : RJ45 Inserted");
+        Debug.Log($"{name} : RJ45 Crimped");
 
         return true;
     }
+
 #if UNITY_EDITOR
-    [ContextMenu("Test/Try Insert")]
-    private void TestTryInsert()
+
+    [ContextMenu("Test/Try Crimp")]
+    private void TestTryCrimp()
     {
-        bool result = TryInsert();
+        bool result = TryCrimp();
 
         Debug.Log($"Result : {result}");
-        Debug.Log($"Cable : {cablePoint.State}");
         Debug.Log($"RJ45 : {rj45Point.State}");
     }
+
 #endif
 }

@@ -29,6 +29,13 @@ public class CableInput : MonoBehaviour
 
     private void Update()
     {
+        // Arbitrase: drag hanya diproses saat mode DragCable.
+        if (!InputModeService.Is(InputMode.DragCable))
+        {
+            selectedPoint = null;
+            return;
+        }
+
         HandlePointerDown();
         HandleDrag();
         HandlePointerUp();
