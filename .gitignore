@@ -108,4 +108,15 @@ InitTestScene*.unity*
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
+# Unity auto-save recovery scenes (not source)
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
+# Local QA screenshots (not shipped assets)
+/[Aa]ssets/Screenshots/
+/[Aa]ssets/Screenshots.meta
+
+# Generated solution (Unity 6 uses .slnx instead of .sln)
+*.slnx
+
 Screenshoot/
