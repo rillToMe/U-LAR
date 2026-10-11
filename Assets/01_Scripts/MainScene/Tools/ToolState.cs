@@ -5,5 +5,6 @@
     RJ45Tool,
     CrimpingTool,
     Cutter,
-    LanTester
+    LanTester,
+    CopperTool
 }
