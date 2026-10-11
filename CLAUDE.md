@@ -83,7 +83,26 @@ A single click reaches both. When changing click behaviour, check both files —
 
 ## AR status
 
-Despite the project name, **AR is not integrated**. The project was created from a Vuforia template: `Assets/Editor/Migration/AddVuforiaEnginePackage.cs` is `[InitializeOnLoad]` and will show a dialog offering to add Vuforia 11.4.4 from a scoped registry, but `Packages/manifest.json` contains no Vuforia entry and no `.tgz` is present in that folder. Don't assume Vuforia APIs are available; if that dialog is dismissed the project stays non-AR. Android is the intended target (`AndroidTargetArchitectures: 2` = ARM64).
+Despite the project name, **AR is not integrated**.
+## Skill wajib
+
+Repo ini pakai 3 plugin/skill pihak ketiga:
+
+- **[ponytail](https://github.com/dietrichgebert/ponytail)** — disiplin YAGNI: sebelum nulis kode, agent harus cek tangga "perlu ada? sudah ada di codebase? bisa stdlib/native/dependency yang udah kepasang? baru custom code". Nolak over-engineering (contoh: minta date picker → jangan install library, pakai `<input type="date">`).
+- **[caveman](https://github.com/juliusbrussee/caveman)** — bikin balasan teks (bukan kode) singkat & padat, potong basa-basi. Kode, command, path, error message tetap byte-exact, gak ikut dipotong.
+- **[context-mode](https://github.com/mksglu/context-mode)** — sandbox hasil tool call (misal `git log`, baca file gede, hasil AssetImportWorker0.log) supaya raw output gak numpuk di context window; juga jaga continuity antar sesi kalau context ke-compact.
+
+## Boundaries — jangan diotak-atik selain code
+
+Agent **hanya** boleh mengedit file `.cs` di `Assets/01_Scripts/`. File-file berikut **tidak boleh** diedit, dibuat, atau dihapus tanpa izin eksplisit dari user, walau kelihatan relevan sama task yang sedang dikerjakan:
+
+- `.unity` (scene), `.prefab`, `.asset` — ini serialized YAML, editnya harus lewat Unity Editor sama user langsung, bukan text-edit.
+- `.meta` — kecuali sebagai bagian dari rename file `.cs` yang memang diminta (contoh: fix `RJ34View.cs` → `RJ45View.cs`, rename `.cs` + `.meta` bareng boleh, karena itu memang bagian dari task code).
+- `ProjectSettings/`, `Packages/manifest.json` — jangan disentuh.
+- `GameInput.inputactions` — jangan diedit langsung; kalau butuh perubahan action/binding, kasih tau user apa yang perlu diubah lewat Input Actions editor. `GameInput.cs` hasil generate-nya juga jangan disentuh sama sekali.
+- Aset di luar `Assets/01_Scripts/` (model, material, audio, dll) — read-only.
+
+Kalau suatu task butuh perubahan di file-file di atas (misal wiring field baru ke Inspector, nambah node spline, ubah input binding), berhenti dan kasih instruksi manual step-by-step ke user — jangan coba edit otomatis.
 
 ## Conventions
 

@@ -86,7 +86,9 @@ crashlytics-build.properties
 
 # TestRunner generated files
 InitTestScene*.unity*
-
+.codegraph
+.idea
+.vscode
 # Addressables default ignores, before user customizations
 /ServerData
 /[Aa]ssets/StreamingAssets/aa*
@@ -105,3 +107,5 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+Screenshoot/
